@@ -152,42 +152,36 @@ const RubiksCube = () => {
           transition: 'transform 0.3s ease'
         }}
       >
-        {/* Front Face */}
         <Face
           face={faces[0]}
           transform={`translateZ(${TRANSLATION_DISTANCE})`}
           zIndex={rotateY > -90 && rotateY < 90 ? 3 : 0}
         />
        
-        {/* Right Face */}
         <Face
           face={faces[1]}
           transform={`rotateY(90deg) translateZ(${TRANSLATION_DISTANCE})`}
           zIndex={rotateY > 0 ? 3 : 0}
         />
        
-        {/* Back Face */}
         <Face
           face={faces[2]}
           transform={`rotateY(180deg) translateZ(${TRANSLATION_DISTANCE})`}
           zIndex={rotateY > 90 || rotateY < -90 ? 3 : 0}
         />
        
-        {/* Left Face */}
         <Face
           face={faces[3]}
           transform={`rotateY(-90deg) translateZ(${TRANSLATION_DISTANCE})`}
           zIndex={rotateY < 0 ? 3 : 0}
         />
        
-        {/* Up Face */}
         <Face
           face={faces[4]}
           transform={`rotateX(90deg) translateZ(${TRANSLATION_DISTANCE})`}
           zIndex={rotateX < 0 ? 3 : 0}
         />
        
-        {/* Down Face */}
         <Face
           face={faces[5]}
           transform={`rotateX(-90deg) translateZ(${TRANSLATION_DISTANCE})`}

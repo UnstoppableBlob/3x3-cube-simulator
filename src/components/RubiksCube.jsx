@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { turnRed, turnWhite, turnYellow, turnBlue, turnOrange, turnGreen, getFaces } from "./helpers"
 
 const RubiksCube = () => {
   const [rotateX, setRotateX] = useState(-25);
@@ -6,8 +7,10 @@ const RubiksCube = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const TRANSLATION_DISTANCE = "95px";
+  const [darkMode, setDarkMode] = useState(false);
+  const [scale, setScale] = useState(1);
 
-  const handleMouseDown = (e) => {
+  const onDown = (e) => {
     setIsDragging(true);
     setDragStart({
       x: e.clientX,
@@ -15,7 +18,7 @@ const RubiksCube = () => {
     });
   };
 
-  const handleMouseMove = (e) => {
+  const onMove = (e) => {
     if (!isDragging) return;
 
     const deltaX = e.clientX - dragStart.x;
@@ -30,21 +33,25 @@ const RubiksCube = () => {
     });
   };
 
-  const handleMouseUp = () => {
+  const onUp = () => {
     setIsDragging(false);
   };
 
   useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
 
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
     };
   }, [isDragging, dragStart]);
 
-  const [cubeState, setCubeState] = useState([
+
+    
+  
+
+  const [cubeState, setCubeState] = useState([ // okay prettier messed this formatting up
     "W",
     "W",
     "W",
@@ -101,210 +108,18 @@ const RubiksCube = () => {
     "Y",
   ]);
 
-  const faces_template = [
-    [
-      [18, 19, 20],
-      [21, 22, 23],
-      [24, 25, 26],
-    ],
-    [
-      [27, 28, 29],
-      [30, 31, 32],
-      [33, 34, 35],
-    ],
-    [
-      [36, 37, 38],
-      [39, 40, 41],
-      [42, 43, 44],
-    ],
-    [
-      [9, 10, 11],
-      [12, 13, 14],
-      [15, 16, 17],
-    ],
-    [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-    ],
-    [
-      [45, 46, 47],
-      [48, 49, 50],
-      [51, 52, 53],
-    ],
-  ];
-
-  const getFaces = (cube) => {
-    const faces = Array(6)
-      .fill()
-      .map(() =>
-        Array(3)
-          .fill()
-          .map(() => Array(3).fill(""))
-      );
-
-    for (let i = 0; i < 6; i++) {
-      for (let j = 0; j < 3; j++) {
-        for (let k = 0; k < 3; k++) {
-          faces[i][j][k] = cube[faces_template[i][j][k]];
-        }
-      }
-    }
-    return faces;
-  };
+  
 
   const faces = getFaces(cubeState);
 
-  const turnRed = [
-    [18, 20],
-    [19, 23],
-    [20, 26],
-    [21, 19],
-    [22, 22],
-    [23, 25],
-    [24, 18],
-    [25, 21],
-    [26, 24],
-    [6, 27],
-    [7, 30],
-    [8, 33],
-    [27, 47],
-    [30, 46],
-    [33, 45],
-    [47, 17],
-    [46, 14],
-    [45, 11],
-    [17, 6],
-    [14, 7],
-    [11, 8],
-  ];
-
-  const turnWhite = [
-    [0, 2],
-    [1, 5],
-    [2, 8],
-    [5, 7],
-    [8, 6],
-    [7, 3],
-    [6, 0],
-    [3, 1],
-    [4, 4],
-    [20, 11],
-    [19, 10],
-    [18, 9],
-    [11, 38],
-    [10, 37],
-    [9, 36],
-    [38, 29],
-    [37, 28],
-    [36, 27],
-    [29, 20],
-    [28, 19],
-    [27, 18],
-  ];
-
-  const turnYellow = [
-    [45, 47],
-    [46, 50],
-    [47, 53],
-    [50, 52],
-    [53, 51],
-    [52, 48],
-    [51, 45],
-    [48, 46],
-    [49, 49],
-    [24, 33],
-    [25, 34],
-    [26, 35],
-    [33, 42],
-    [34, 43],
-    [35, 44],
-    [42, 15],
-    [43, 16],
-    [44, 17],
-    [15, 24],
-    [16, 25],
-    [17, 26],
-  ];
-
-  const turnBlue = [
-    [27, 29],
-    [28, 32],
-    [29, 35],
-    [32, 34],
-    [35, 33],
-    [34, 30],
-    [33, 27],
-    [30, 28],
-    [31, 31],
-    [8, 36],
-    [5, 39],
-    [2, 42],
-    [36, 53],
-    [39, 50],
-    [42, 47],
-    [53, 26],
-    [50, 23],
-    [47, 20],
-    [26, 8],
-    [23, 5],
-    [20, 2],
-  ];
-
-  const turnOrange = [
-    [36, 38],
-    [37, 41],
-    [38, 44],
-    [41, 43],
-    [44, 42],
-    [43, 39],
-    [42, 36],
-    [39, 37],
-    [40, 40],
-    [2, 9],
-    [1, 12],
-    [0, 15],
-    [9, 51],
-    [12, 52],
-    [15, 53],
-    [51, 35],
-    [52, 32],
-    [53, 29],
-    [35, 2],
-    [32, 1],
-    [29, 0],
-  ];
-
-  const turnGreen = [
-    [9, 11],
-    [10, 14],
-    [11, 17],
-    [14, 16],
-    [17, 15],
-    [16, 12],
-    [15, 9],
-    [12, 10],
-    [13, 13],
-    [0, 18],
-    [3, 21],
-    [6, 24],
-    [18, 45],
-    [21, 48],
-    [24, 51],
-    [45, 44],
-    [48, 41],
-    [51, 38],
-    [44, 0],
-    [41, 3],
-    [38, 6],
-  ];
-
-  function doTurn(turnList) {
+  function doTurn(turnList, anim = true) {
+    if (anim) setScale(0.85);
     const newCube = [...cubeState];
     turnList.forEach((turn) => {
       newCube[turn[1]] = cubeState[turn[0]];
     });
     setCubeState(newCube);
+    if (anim) setTimeout(() => setScale(1), 100);
   }
 
   const colorMap = {
@@ -316,7 +131,73 @@ const RubiksCube = () => {
     Y: "#FCD34D",
   };
 
-  const scrambleCube = async () => {
+useEffect(() => {
+  const k = (e) => {
+    console.log(e.key)
+    switch (e.key) {
+      case "a":
+        setRotateY((prev) => prev - 90);
+        break;
+      case "d":
+        setRotateY((prev) => prev + 90);
+        break;
+      case "w":
+        setRotateX((prev) => prev + 90);
+        break;
+      case "s":
+        setRotateX((prev) => prev - 90);
+        break;
+      // rgbywo clockwise
+      case "r":
+        doTurn(turnRed);
+        break;
+      case "g":
+        doTurn(turnGreen);
+        break;
+      case "b":
+        doTurn(turnBlue);
+        break;
+      case "o":
+        doTurn(turnOrange);
+        break;
+      case "y":
+        doTurn(turnYellow);
+        break;
+      case "v":
+        doTurn(turnWhite);
+        break;
+      // RGBYWO anticlockwise
+      case "R":
+        doTurn(turnRed.map(([a, b]) => [b, a]));
+        break;
+      case "G":
+        doTurn(turnGreen.map(([a, b]) => [b, a]));
+        break;
+      case "B":
+        doTurn(turnBlue.map(([a, b]) => [b, a]));
+        break;
+      case "O":
+        doTurn(turnOrange.map(([a, b]) => [b, a]));
+        break;
+      case "Y":
+        doTurn(turnYellow.map(([a, b]) => [b, a]));
+        break;
+      case "V":
+        doTurn(turnWhite.map(([a, b]) => [b, a]));
+        break;
+      default:
+        break;
+    }
+  }
+
+  document.addEventListener("keypress", k);
+  return () => {
+    document.removeEventListener("keypress", (k))
+  }
+}, [cubeState])
+
+  const scramble = async (anim = true) => {
+    if (anim) setScale(0.75);
     const turns = [
       turnRed,
       turnBlue,
@@ -342,7 +223,31 @@ const RubiksCube = () => {
       currentCubeState = newCubeState;
       setCubeState(newCubeState);
     }
+
+    if (anim) setScale(1);
   };
+
+  async function lookCool() {
+    const randomRotates = setInterval(() => {
+      const rotates = [
+        () => setRotateX((prev) => prev + 90),
+        () => setRotateX((prev) => prev - 90),
+        () => setRotateY((prev) => prev + 90),
+        () => setRotateY((prev) => prev - 90),
+      ];
+      rotates[Math.floor(Math.random() * rotates.length)]();
+    }, 150);
+
+    setScale(0.75);
+    await scramble(false);
+    setScale(1.25);
+    await scramble(false);
+    setScale(0.75);
+    await scramble(false);
+    setScale(1)
+
+    clearInterval(randomRotates);
+  }
 
   const Face = ({ face, transform, zIndex }) => (
     <div
@@ -362,12 +267,18 @@ const RubiksCube = () => {
   );
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-8 pt-24">
+    <div className={`w-full h-full flex flex-col items-center justify-center gap-8 pt-24 ${darkMode ? "bg-gray-800 text-white" : ""}`}>
+    <button
+      onClick={() => setDarkMode(!darkMode)}
+      className={`fixed top-4 right-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 z-10 ${darkMode ? "invert text-gray-800" : ""}`}
+    >
+      {darkMode ? "Light Mode" : "Dark Mode"}
+    </button>
       <div
-        className="relative w-48 h-48 mb-24 cursor-grab active:cursor-grabbing"
-        onMouseDown={handleMouseDown}
+        className={`relative w-48 h-48 mb-24 cursor-grab active:cursor-grabbing`}
+        onMouseDown={onDown}
         style={{
-          transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+          transform: `scale(${scale}) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
           transformStyle: "preserve-3d",
           transition: isDragging ? "none" : "transform 0.3s ease",
         }}
@@ -404,30 +315,30 @@ const RubiksCube = () => {
         />
       </div>
 
-      <div className="flex gap-4">
+      <div className={`flex gap-4 ${darkMode ? "invert text-gray-800" : ""}`}>
         <button
           className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
           onClick={() => setRotateY((prev) => prev - 90)}
         >
-          Rotate Left
+          Rotate Left (A)
         </button>
         <button
           className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
           onClick={() => setRotateY((prev) => prev + 90)}
         >
-          Rotate Right
-        </button>
-        <button
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-          onClick={() => setRotateX((prev) => prev - 90)}
-        >
-          Rotate Up
+          Rotate Right (D)
         </button>
         <button
           className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
           onClick={() => setRotateX((prev) => prev + 90)}
         >
-          Rotate Down
+          Rotate Up (W)
+        </button>
+        <button
+          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          onClick={() => setRotateX((prev) => prev - 90)}
+        >
+          Rotate Down (S)
         </button>
       </div>
 
@@ -436,79 +347,85 @@ const RubiksCube = () => {
           className="px-4 py-2 bg-red-200 text-red-800 rounded hover:bg-red-300"
           onClick={() => doTurn(turnRed)}
         >
-          Rotate Red Clockwise
+          Rotate Red Clockwise (R)
         </button>
         <button
           className="px-4 py-2 bg-red-200 text-red-800 rounded hover:bg-red-300"
           onClick={() => doTurn(turnRed.map(([a, b]) => [b, a]))}
         >
-          Rotate Red Anticlockwise
+          Rotate Red Anticlockwise (Shift+R)
         </button>
         <button
           className="px-4 py-2 bg-blue-200 text-blue-800 rounded hover:bg-blue-300"
           onClick={() => doTurn(turnBlue)}
         >
-          Rotate Blue Clockwise
+          Rotate Blue Clockwise (B)
         </button>
         <button
           className="px-4 py-2 bg-blue-200 text-blue-800 rounded hover:bg-blue-300"
           onClick={() => doTurn(turnBlue.map(([a, b]) => [b, a]))}
         >
-          Rotate Blue Anticlockwise
+          Rotate Blue Anticlockwise (Shift+B)
         </button>
         <button
           className="px-4 py-2 bg-orange-200 text-orange-800 rounded hover:bg-orange-300"
           onClick={() => doTurn(turnOrange)}
         >
-          Rotate Orange Clockwise
+          Rotate Orange Clockwise (O)
         </button>
         <button
           className="px-4 py-2 bg-orange-200 text-orange-800 rounded hover:bg-orange-300"
           onClick={() => doTurn(turnOrange.map(([a, b]) => [b, a]))}
         >
-          Rotate Orange Anticlockwise
+          Rotate Orange Anticlockwise (Shift+O)
         </button>
         <button
           className="px-4 py-2 bg-green-200 text-green-800 rounded hover:bg-green-300"
           onClick={() => doTurn(turnGreen)}
         >
-          Rotate Green Clockwise
+          Rotate Green Clockwise (G)
         </button>
         <button
           className="px-4 py-2 bg-green-200 text-green-800 rounded hover:bg-green-300"
           onClick={() => doTurn(turnGreen.map(([a, b]) => [b, a]))}
         >
-          Rotate Green Anticlockwise
+          Rotate Green Anticlockwise (Shift+G)
         </button>
         <button
           className="px-4 py-2 bg-white text-gray-800 rounded hover:bg-gray-300 border border-gray-300"
           onClick={() => doTurn(turnWhite)}
         >
-          Rotate White Clockwise
+          Rotate White Clockwise (V)
         </button>
         <button
           className="px-4 py-2 bg-white text-gray-800 rounded hover:bg-gray-300 border border-gray-300"
           onClick={() => doTurn(turnWhite.map(([a, b]) => [b, a]))}
         >
-          Rotate White Anticlockwise
+          Rotate White Anticlockwise (Shift+V)
         </button>
         <button
           className="px-4 py-2 bg-yellow-200 text-yellow-800 rounded hover:bg-yellow-300"
           onClick={() => doTurn(turnYellow)}
         >
-          Rotate Yellow Clockwise
+          Rotate Yellow Clockwise (Y)
         </button>
         <button
           className="px-4 py-2 bg-yellow-200 text-yellow-800 rounded hover:bg-yellow-300"
           onClick={() => doTurn(turnYellow.map(([a, b]) => [b, a]))}
         >
-          Rotate Yellow Anticlockwise
+          Rotate Yellow Anticlockwise (Shift+Y)
         </button>
         <button
           className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
-          onClick={scrambleCube}
+          onClick={scramble}
         >
           Scramble
+        </button>
+        <button
+          className="px-4 py-2 rounded-full bg-gradient-to-br from-purple-500 via-blue-500 to-purple-500 text-white hover:from-purple-600 hover:to-blue-600"
+          onClick={lookCool}
+        >
+          Cool Effect!
         </button>
       </div>
     </div>
